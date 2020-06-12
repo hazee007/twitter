@@ -1,18 +1,16 @@
 import React from 'react';
-import { AppContainer, MainAppContainer } from './App.styles';
-import SideBar from './Sidebar/sidebar.components';
-import Main from './Main/main.container';
-import SubMenu from './Submenu/submenu.components';
+import { AppContainer } from './App.styles';
+import Layout from './page/layout/layout.page';
+import Login from './components/Login/login.components';
 
 function App() {
   return (
-    <AppContainer>
-      <SideBar />
-      <MainAppContainer>
-        <Main />
-        <SubMenu />
-      </MainAppContainer>
-    </AppContainer>
+    <div>
+      {/* <Layout /> */}
+      <AppContainer>
+        <Login />
+      </AppContainer>
+    </div>
   );
 }
 

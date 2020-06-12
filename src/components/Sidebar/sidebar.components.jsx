@@ -15,8 +15,8 @@ import {
   PostIcons,
   PostCardIcon,
 } from '../Postcard/postcard.styles';
-import TwitterButton from '../utils/Button/button.components';
-import { dropdown } from '../utils/Icons';
+import TwitterButton from '../Button/button.components';
+import { dropdown } from '../../utils/Icons';
 
 const SideBar = () => {
   const Links = [

@@ -18,7 +18,7 @@ import {
   like,
   bookmarkArrow,
   bookmark,
-} from '../utils/Icons';
+} from '../../utils/Icons';
 
 const PostCard = () => {
   return (
