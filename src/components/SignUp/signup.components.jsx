@@ -7,28 +7,33 @@ import {
   ButtonConatiner,
   ForgotAndRegister,
   Links,
-} from './login.styles';
+} from '../Login/login.styles';
 import { twitter } from '../../utils/Icons';
 import FormInput from '../Form/form.components';
 import TwitterButton from '../Button/button.components';
 import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
 
-const Login = () => {
+const SignUp = () => {
   const [userCredentials, setUserCredentials] = useState({
     email: '',
     password: '',
+    displayName: '',
   });
 
-  const { email, password } = userCredentials;
+  const { displayName, email, password } = userCredentials;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
-      const { user } = auth.signInWithEmailAndPassword(email, password);
-      await createUserProfileDocument(user);
+      const { user } = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      await createUserProfileDocument(user, { displayName });
       setUserCredentials({
         email: '',
         password: '',
+        displayName: '',
       });
     } catch (error) {
       console.log(error);
@@ -49,9 +54,17 @@ const Login = () => {
         </TwitterLogo>
       </TwitterLogoCover>
       <LoginText>
-        <span>Log in to Twitter</span>
+        <span>Sign Up</span>
       </LoginText>
       <form onSubmit={handleSubmit}>
+        <FormInput
+          type="name"
+          name="displayName"
+          value={displayName}
+          handleChange={handleChange}
+          label="displayName"
+          required
+        ></FormInput>
         <FormInput
           type="email"
           name="email"
@@ -73,11 +86,10 @@ const Login = () => {
         </ButtonConatiner>
       </form>
       <ForgotAndRegister>
-        <Links to="#"> Forget password?</Links> &nbsp; &nbsp;
-        <Links to="/register">Sign up for Twitter</Links>
+        <Links to="/login"> Already have an account?</Links>
       </ForgotAndRegister>
     </LoginCover>
   );
 };
 
-export default Login;
+export default SignUp;

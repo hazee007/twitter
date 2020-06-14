@@ -4,20 +4,17 @@ import {
   GroupContainer,
   FormInputContainer,
   LabeDiv,
-  FormLabel,
   LabelContainer,
 } from './form.styles';
 
-const FormInput = ({ label }) => (
+const FormInput = ({ label, handleChange, ...OtherProps }) => (
   <GroupContainer>
-    <FormLabel>
-      <LabelContainer>
-        <LabeDiv>
-          <span>{label}</span>
-        </LabeDiv>
-        <FormInputContainer></FormInputContainer>
-      </LabelContainer>
-    </FormLabel>
+    <LabelContainer>
+      <LabeDiv>
+        <span>{label}</span>
+      </LabeDiv>
+      <FormInputContainer onChange={handleChange} {...OtherProps} />
+    </LabelContainer>
   </GroupContainer>
 );
 

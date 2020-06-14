@@ -16,14 +16,6 @@ export const GroupContainer = styled.div`
   }
 `;
 
-export const FormLabel = styled.label`
-  //   border-bottom-width: 2px;
-  //   background-color: rgb(25, 39, 52);
-  //   -webkit-box-direction: normal;
-  //   -webkit-box-orient: horizontal;
-  //   flex-direction: row;
-`;
-
 export const LabelContainer = styled.div`
   font-weight: 400;
   padding-left: 10px;
