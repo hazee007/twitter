@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const LoginCover = styled.div`
     display: grid,
+    // justify-content: center;
     width: 400px
 `;
 
@@ -44,4 +45,10 @@ export const Links = styled(Link)`
     text-decoration: underline;
     cursor: pointer;
   }
+`;
+
+export const ErrorTag = styled.div`
+  display: flex;
+  justify-content: center;
+  color: red;
 `;

@@ -1,58 +1,61 @@
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-// import Layout from './page/layout/layout.page';
+import Layout from './page/layout/layout.page';
 
 import LoginPage from './page/login/login.page';
 import SignupPage from './page/signUp/signup.page';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppContainer } from './App.styles';
 import { setCurrentUser } from './redux/user/user.action';
+import { selectCurrentUser } from './redux/user/user.selector';
 
-class App extends React.Component {
-  unsubscribeFromAuth = null;
-  componentDidMount() {
-    const { setCurrentUser } = this.props;
+const App = () => {
+  const dispatch = useDispatch();
 
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+  const currentUser = useSelector((state) => selectCurrentUser(state));
+
+  useEffect(() => {
+    const unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
         userRef.onSnapshot((snapShot) => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data(),
-          });
+          dispatch(
+            setCurrentUser({
+              id: snapShot.id,
+              ...snapShot.data(),
+            })
+          );
         });
+      } else {
+        dispatch(setCurrentUser(userAuth));
       }
-
-      setCurrentUser(userAuth);
     });
-  }
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+    return () => {
+      unsubscribeFromAuth();
+    };
+  }, [dispatch]);
 
-  render() {
-    return (
-      <div>
-        {/* <Layout /> */}
-        <AppContainer>
-          {/* <LoginPage /> */}
-          <Switch>
-            <Route path="/register" component={SignupPage} />
-            <Route path="/login" component={LoginPage} />
-            <Route exact path="/" component={LoginPage} />
-          </Switch>
-        </AppContainer>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <AppContainer>
+        <Switch>
+          <Route exact path="/" render={() => <Redirect to="/login" />} />
+          <Route path="/register" component={SignupPage} />
+          <Route
+            exact
+            path="/login"
+            render={() =>
+              currentUser ? <Redirect to="/home" /> : <LoginPage />
+            }
+          />
+          <Route path="/home" component={Layout} />
+        </Switch>
+      </AppContainer>
+    </div>
+  );
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser: (user) => dispatch(setCurrentUser(user)),
-});
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;

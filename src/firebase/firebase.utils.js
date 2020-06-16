@@ -51,3 +51,25 @@ export const getCurrentUser = () => {
     }, reject);
   });
 };
+
+//Sign In function
+// There is a closed issue in the firebase-js-sdk project here with some details on it. Ultimately,
+// what is happening with this implantation is a timeout is getting set that throws an exception outside of the scope of the try/catch:
+export async function signIn(email, password) {
+  return new Promise((resolve, reject) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCreds) => resolve(userCreds))
+      .catch((reason) => reject(reason));
+  });
+}
+export async function signupUser(email, password) {
+  return new Promise((resolve, reject) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCreds) => resolve(userCreds))
+      .catch((reason) => reject(reason));
+  });
+}

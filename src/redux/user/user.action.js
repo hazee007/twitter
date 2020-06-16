@@ -8,3 +8,13 @@ export const setCurrentUser = (user) => ({
 export const checkUserSection = () => ({
   type: UserActionTypes.CHECK_USER_SECTION,
 });
+
+export const loginError = (err) => ({
+  type: UserActionTypes.LOGIN_ERROR,
+  payload: err,
+});
+
+export const SignupError = (err) => ({
+  type: UserActionTypes.LOGIN_ERROR,
+  payload: err,
+});

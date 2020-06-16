@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   TwitterLogoCover,
   TwitterLogo,
@@ -7,36 +8,46 @@ import {
   ButtonConatiner,
   ForgotAndRegister,
   Links,
+  ErrorTag,
 } from '../Login/login.styles';
 import { twitter } from '../../utils/Icons';
 import FormInput from '../Form/form.components';
 import TwitterButton from '../Button/button.components';
-import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
+import {
+  signupUser,
+  createUserProfileDocument,
+} from '../../firebase/firebase.utils';
+import UserActionTypes from '../../redux/user/user.types';
+import { AuthError } from '../../redux/user/user.selector';
+import { useHistory } from 'react-router-dom';
 
 const SignUp = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const [userCredentials, setUserCredentials] = useState({
     email: '',
     password: '',
     displayName: '',
   });
 
+  const logErr = useSelector((state) => AuthError(state));
+
   const { displayName, email, password } = userCredentials;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
+      const { user } = await signupUser(email, password);
       await createUserProfileDocument(user, { displayName });
       setUserCredentials({
         email: '',
         password: '',
         displayName: '',
       });
+      history.push('/');
     } catch (error) {
-      console.log(error);
+      const err = error.message;
+      dispatch({ type: UserActionTypes.SIGNUP_ERROR, err });
     }
   };
 
@@ -82,12 +93,13 @@ const SignUp = () => {
           required
         ></FormInput>
         <ButtonConatiner>
-          <TwitterButton type="submit">Log in </TwitterButton>
+          <TwitterButton type="submit">Sign up </TwitterButton>
         </ButtonConatiner>
       </form>
       <ForgotAndRegister>
         <Links to="/login"> Already have an account?</Links>
       </ForgotAndRegister>
+      <ErrorTag>{logErr ? <span>{logErr}</span> : null}</ErrorTag>
     </LoginCover>
   );
 };

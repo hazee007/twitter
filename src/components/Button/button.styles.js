@@ -10,6 +10,7 @@ export const TweetButton = styled.button`
   color: white;
   font-weight: 600;
   margin: 10px 0;
+  outline: none;
   &:hover {
     cousor: pointer;
     background-color: rgb(26, 145, 218);

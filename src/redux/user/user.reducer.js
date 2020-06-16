@@ -10,6 +10,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload,
+        errMsg: null,
+      };
+
+    case UserActionTypes.LOGIN_ERROR:
+    case UserActionTypes.SIGNUP_ERROR:
+      return {
+        ...state,
+        errMsg: action.err,
       };
 
     default:

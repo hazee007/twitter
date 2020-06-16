@@ -17,8 +17,27 @@ import {
 } from '../Postcard/postcard.styles';
 import TwitterButton from '../Button/button.components';
 import { dropdown } from '../../utils/Icons';
+import { useState } from 'react';
+import Modal from '../Modal/modal.components';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../redux/user/user.selector';
+import DropDown from '../Dropdown/dropdown.components';
+import { BackDrop } from '../Modal/modal.styles';
 
 const SideBar = () => {
+  const [isShowing, setIsShowing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModalHandler = () => {
+    setIsShowing(true);
+  };
+
+  const closeModalHandler = () => {
+    setIsShowing(false);
+  };
+
+  const currentUser = useSelector((state) => selectCurrentUser(state));
+
   const Links = [
     {
       id: 1,
@@ -66,6 +85,7 @@ const SideBar = () => {
 
   return (
     <SideCover>
+      {isShowing ? <BackDrop onClick={closeModalHandler}></BackDrop> : null}
       {Links.map((nav, id) => (
         <SideList key={id}>
           <SideIcon viewBox="0 0 24 24">
@@ -76,7 +96,13 @@ const SideBar = () => {
           <SideLink to={nav.title.toLocaleLowerCase()}>{nav.title}</SideLink>
         </SideList>
       ))}
-      <TwitterButton />
+      <div onClick={openModalHandler}>
+        <TwitterButton> Tweet </TwitterButton>
+        <Modal className="modal" show={isShowing} close={closeModalHandler}>
+          Maybe aircrafts fly very high because they don't want to be seen in
+          plane sight?
+        </Modal>
+      </div>
       <AccounMenuContainer>
         <PostTest>
           <PostImageContainer>
@@ -89,7 +115,7 @@ const SideBar = () => {
         <SideUser>
           <span>Akinjide ji...</span> <br /> <span>@HazeeJim</span>{' '}
         </SideUser>
-        <PostCardIcon>
+        <PostCardIcon onClick={() => setIsOpen(!isOpen)}>
           <PostIcons viewBox="0 0 24 24">
             <g>
               <path d={dropdown}></path>
@@ -97,6 +123,7 @@ const SideBar = () => {
           </PostIcons>
         </PostCardIcon>
       </AccounMenuContainer>
+      {isOpen ? <DropDown user={currentUser}></DropDown> : null}
     </SideCover>
   );
 };

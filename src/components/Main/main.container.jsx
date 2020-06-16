@@ -5,7 +5,7 @@ import PostCard from '../Postcard/postcard.components';
 const Main = () => {
   return (
     <MainContainer>
-      <MainHeader className="">Home</MainHeader>
+      <MainHeader>Home</MainHeader>
       <PostCard />
     </MainContainer>
   );

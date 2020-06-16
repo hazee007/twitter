@@ -7,31 +7,42 @@ import {
   ButtonConatiner,
   ForgotAndRegister,
   Links,
+  ErrorTag,
 } from './login.styles';
 import { twitter } from '../../utils/Icons';
 import FormInput from '../Form/form.components';
 import TwitterButton from '../Button/button.components';
-import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
+import {
+  createUserProfileDocument,
+  signIn,
+} from '../../firebase/firebase.utils';
+import { useDispatch, useSelector } from 'react-redux';
+import UserActionTypes from '../../redux/user/user.types';
+import { AuthError } from '../../redux/user/user.selector';
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [userCredentials, setUserCredentials] = useState({
     email: '',
     password: '',
   });
+
+  const logErr = useSelector((state) => AuthError(state));
 
   const { email, password } = userCredentials;
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const { user } = auth.signInWithEmailAndPassword(email, password);
+      const { user } = await signIn(email, password);
       await createUserProfileDocument(user);
       setUserCredentials({
         email: '',
         password: '',
       });
     } catch (error) {
-      console.log(error);
+      const err = error.message;
+      dispatch({ type: UserActionTypes.LOGIN_ERROR, err });
     }
   };
 
@@ -76,6 +87,7 @@ const Login = () => {
         <Links to="#"> Forget password?</Links> &nbsp; &nbsp;
         <Links to="/register">Sign up for Twitter</Links>
       </ForgotAndRegister>
+      <ErrorTag>{logErr ? <span>{logErr}</span> : null}</ErrorTag>
     </LoginCover>
   );
 };
